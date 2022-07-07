@@ -1,15 +1,20 @@
-FROM ubuntu:20.10 as base
+FROM ubuntu:20.04 as base
 
 # MongoDB download URL
-ARG DB_URL=https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2004-5.0.2.tgz
+ARG DB_URL=https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2004-5.0.9.tgz
+ARG MONGO_TOOLS_URL=https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2004-x86_64-100.5.4.tgz
 
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y curl && \
     curl -OL ${DB_URL} && \
-    tar -zxvf mongodb-linux-x86_64-ubuntu2004-5.0.2.tgz && \
-    mv ./mongodb-linux-x86_64-ubuntu2004-5.0.2/bin/* /usr/local/bin/ && \
-    rm -rf ./mongodb-linux-x86_64-ubuntu2004-5.0.2 && rm ./mongodb-linux-x86_64-ubuntu2004-5.0.2.tgz
+    tar -zxvf mongodb-linux-x86_64-ubuntu2004-5.0.9.tgz && \
+    mv ./mongodb-linux-x86_64-ubuntu2004-5.0.9/bin/* /usr/local/bin/ && \
+    curl -OL ${MONGO_TOOLS_URL} && \
+    tar -zxvf mongodb-database-tools-ubuntu2004-x86_64-100.5.4.tgz && \
+    mv ./mongodb-database-tools-ubuntu2004-x86_64-100.5.4/bin/* /usr/local/bin/ && \
+    rm -rf ./mongodb-linux-x86_64-ubuntu2004-5.0.9 && rm ./mongodb-linux-x86_64-ubuntu2004-5.0.9.tgz && \
+    rm -rf ./mongodb-database-tools-ubuntu2004-x86_64-100.5.4 && rm ./mongodb-database-tools-ubuntu2004-x86_64-100.5.4.tgz
 
 COPY ./init-mongodbs.sh ./init-replica.sh ./entry-point.sh /
 
